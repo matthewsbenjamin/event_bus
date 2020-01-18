@@ -8,9 +8,11 @@
 
 Must have an API to receive events (HTTP POST) (w. validation?)
 
-Get requests (HTTP GET) with search function to return events relevant to that service (searching on )
+Get requests (HTTP GET) with search function to return events relevant to that service (searching on Consumed_by)
 
 Connection to MongoDB instance to archive old events (or ones without an expiry date)
+
+Uses gorllia mux
 
 Messages must always follow the following pattern:
 
@@ -34,13 +36,13 @@ Messages must always follow the following pattern:
 Go struct representation of this pattern:
 
 ``` Go
-type message struct {
-    _Id: string
-    Posted_by string
-    Posted_on time.Time
-    Expiry int64
-    Payload interface{}
-    Consumed_by interface{}
+type Event struct {
+    ID        string
+    PostedBy   string
+    PostedOn   time.Time
+    Expiry     int64
+    Payload    map[string]string
+    ConsumedBy map[string]int
 }
 ```
 
@@ -53,7 +55,7 @@ Example:
     "Posted_by": "service_id",
     "Posted_on": "2020-01-01 00:01:02.33",
     "Expiry": 3600, // seconds
-    "Payload": { 
+    "Payload": {
         "Event": "new-user",
         "Event_identifier": "BSM01"
     },
@@ -63,4 +65,26 @@ Example:
         "<service_id3>": 0
         }
 }
+```
+
+The api to query this looks like:
+
+``` HTTP
+/services/{event}/consumption/{n_consumed}
+```
+
+`{event}` Refers to the event ID that a handler will subscribe to
+
+`{n_consumed}` Refers to the maximum number of times that an event can be 
+
+This will return all events in the buffer
+
+``` HTTP
+/services/
+```
+
+This will return all events with nil consumption (orphaned events)
+
+``` HTTP
+/services/{event}/consumption/0
 ```
