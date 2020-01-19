@@ -1,0 +1,14 @@
+{
+	"Notification": "new-user",
+	"Posted_by": "service_id",
+	"Posted_on": "2020-01-01 00:01:02.33",
+	"Expiry": 3600,
+	"Payload": {
+		"Identifier": "BSM01"
+	},
+	"Consumed_by": {
+		"service_id1": 0,
+		"service_id2": 1,
+		"service_id3": 2
+	}
+}
