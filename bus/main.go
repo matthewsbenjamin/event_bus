@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -10,26 +11,28 @@ import (
 // One (or more) of these will be returned in JSON representation
 // by the get requests
 type Event struct {
-	Notfication string            `json:"Notfication"`
-	PostedBy    string            `json:"Posted_by"`
-	PostedOn    string            `json:"Posted_on"`
-	Expiry      int               `json:"Expiry"`
-	Payload     map[string]string `json:"Payload"`
-	ConsumedBy  map[string]int    `json:"Consumed_by"`
+	EventType  string            `json:"EventType"`
+	PostedBy   string            `json:"Posted_by"`
+	PostedOn   time.Time         `json:"Posted_on"`
+	Expiry     int               `json:"Expiry"`
+	Payload    map[string]string `json:"Payload"`
+	ConsumedBy map[string]int    `json:"Consumed_by"`
 }
 
 type server struct {
-	EventBuffer *[]Event
+	EventBuffer []*Event
 	Router      *mux.Router
 }
 
 func newServer() *server {
+
 	s := &server{}
+
 	s.Router = mux.NewRouter()
 	s.routes()
 
-	e := []Event{}
-	s.EventBuffer = &e
+	e := []*Event{}
+	s.EventBuffer = e
 
 	return s
 }

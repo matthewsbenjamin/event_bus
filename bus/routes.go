@@ -6,23 +6,23 @@ func (s *server) routes() {
 	// TODO - extract this from a file
 	s.Router.HandleFunc("/", s.log(s.handleIndex())).Methods("GET")
 
-	// search the buffer for unconsumed event
-	s.Router.HandleFunc("/testing", s.log(s.tempGetAddEvent())).Methods("GET")
-
 	// TODO get all events in the buffer
 	s.Router.HandleFunc("/events", s.log(s.handleGetAllEvents())).Methods("GET")
 
-	// TODO get all events in the buffer
-	s.Router.HandleFunc("/events/{event}", s.log(s.handleGetSpecificEvent())).Methods("GET")
+	// search the buffer for unconsumed event
+	s.Router.HandleFunc("/testingadd", s.log(s.tempGetAddEvent())).Methods("GET")
+
+	// // TODO get all events in the buffer
+	// s.Router.HandleFunc("/events/{event}", s.log(s.handleGetSpecificEvent())).Methods("GET")
 
 	// post a new event to the queue
 	s.Router.HandleFunc("/", s.log(s.handleNewEvent())).Methods("POST")
 
-	// Post succesfully handled events by some service
-	s.Router.HandleFunc("/events/{event}/services/{service}", s.log(s.handleHandledEvent())).Methods("POST")
+	// // Post succesfully handled events by some service
+	// s.Router.HandleFunc("/events/{event}/services/{service}", s.log(s.handleHandledEvent())).Methods("POST")
 
-	// search the buffer for unconsumed event
-	s.Router.HandleFunc("/events/{event}/services/{service}", s.log(s.handleGetUnconsumedEvent())).Methods("GET")
+	// // search the buffer for unconsumed event
+	// s.Router.HandleFunc("/events/{event}/services/{service}", s.log(s.handleGetUnconsumedEvent())).Methods("GET")
 
 }
 
