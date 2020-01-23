@@ -11,6 +11,7 @@ import (
 // One (or more) of these will be returned in JSON representation
 // by the get requests
 type Event struct {
+	UID        string            `json:"UID,omitempty"`
 	EventType  string            `json:"EventType"`
 	PostedBy   string            `json:"Posted_by"`
 	PostedOn   time.Time         `json:"Posted_on"`

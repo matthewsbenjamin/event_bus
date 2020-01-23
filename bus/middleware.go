@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -10,8 +9,8 @@ func (s *server) log(next http.HandlerFunc) http.HandlerFunc {
 
 		// set up some logging functionality in here - make it capture metrics n stuff
 
-		fmt.Println("Before")
-		defer fmt.Println("After")
+		// fmt.Println("Before")
+		// defer fmt.Println("After")
 
 		// Then the thing
 		next.ServeHTTP(w, r) // call original

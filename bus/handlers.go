@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"github.com/gomarkdown/markdown"
+	"github.com/gorilla/mux"
 )
 
 func (s *server) handleIndex() http.HandlerFunc {
@@ -62,7 +64,7 @@ func (s *server) tempGetAddEvent() http.HandlerFunc {
 
 		s.EventBuffer = append(s.EventBuffer, &e)
 
-		fmt.Fprintln(w, http.StatusNoContent)
+		fmt.Fprintln(w, http.StatusCreated)
 
 	}
 
@@ -77,31 +79,96 @@ func (s *server) handleNewEvent() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, req *http.Request) {
 
-		fmt.Fprintln(w, "TODO - handle new event")
+		fmt.Fprint(w, "TODO - handle new event")
 
 	}
 
 }
 
-// func (s *server) handleGetSpecificEvent() http.HandlerFunc {
+func (s *server) handleGetSpecificEvent() http.HandlerFunc {
 
-// 	return func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
 
-// 		fmt.Fprintln(w, "TODO One event")
+		vars := mux.Vars(req)
+		id := vars["uid"]
 
-// 	}
+		for _, e := range s.EventBuffer {
+			if e.UID == id {
 
-// }
+				json.NewEncoder(w).Encode(e)
+				return
 
-// func (s *server) handleHandledEvent() http.HandlerFunc {
+			}
+		}
 
-// 	return func(w http.ResponseWriter, req *http.Request) {
+		fmt.Fprint(w, http.StatusNoContent)
+	}
+}
 
-// 		fmt.Fprintln(w, "TODO Handle handled event")
+func (s *server) handleGetEventType() http.HandlerFunc {
 
-// 	}
+	return func(w http.ResponseWriter, req *http.Request) {
 
-// }
+		vars := mux.Vars(req)
+		t := vars["type"]
+		fmt.Println(t)
+
+		for _, e := range s.EventBuffer {
+			if e.EventType == t {
+				fmt.Println(e)
+				json.NewEncoder(w).Encode(e)
+				return
+
+			}
+		}
+
+		fmt.Fprint(w, http.StatusNoContent)
+	}
+
+}
+
+func (s *server) handleGetEventTypeWithConsumption() http.HandlerFunc {
+
+	return func(w http.ResponseWriter, req *http.Request) {
+
+		vars := mux.Vars(req)
+		t := vars["type"]
+		serv := vars["service"]
+		n, err := strconv.Atoi(vars["n"])
+		if err != nil {
+			n = 1
+		}
+
+		for _, e := range s.EventBuffer {
+			if e.EventType == t {
+
+				// found the event, now search the consumed services
+
+				count, ok := e.ConsumedBy[serv]
+				fmt.Println(count)
+				fmt.Println(ok)
+				if ok && count < n {
+					json.NewEncoder(w).Encode(e)
+					return
+				}
+				continue
+			}
+		}
+
+		fmt.Fprint(w, http.StatusNoContent)
+	}
+
+}
+
+func (s *server) handleHandledEvent() http.HandlerFunc {
+
+	return func(w http.ResponseWriter, req *http.Request) {
+
+		fmt.Fprint(w, "TODO Handle handled event")
+
+	}
+
+}
 
 // // searching the buffer for unconsumed events
 // // can only return ONE event at a time - allows for service competition

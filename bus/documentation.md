@@ -10,6 +10,7 @@ GET requests will return:
 
 ``` JSON
 {
+ "UID": "a uid auto created by the queue service",
  "EventType": "new-user",
  "Posted_by": "service_id",
  "Posted_on": "<ISO 8601>",

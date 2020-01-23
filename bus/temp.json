@@ -1,14 +1,13 @@
 {
-	"EventType": "new-user",
+	"UID": "ccc",
+	"EventType": "butt",
 	"Posted_by": "service_id",
 	"Posted_on": "2020-01-21T21:31:58Z",
-	"Expiry": 3600,
+	"Expiry": 123,
 	"Payload": {
 		"Identifier": "BSM01"
 	},
 	"Consumed_by": {
-		"service_id1": 0,
-		"service_id2": 1,
-		"service_id3": 2
+		"servicename": 1
 	}
 }
